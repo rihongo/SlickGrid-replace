@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>replace</title>
+	<link rel="stylesheet" href="build/styles.css" type="text/css"/>
+  <!--<link rel="stylesheet" href="css/slick.grid.css" type="text/css"/>-->
+  <!--<link rel="stylesheet" href="css/plugins-common.css" type="text/css" />-->
+  <!--<link rel="stylesheet" href="css/plugins-gdoc-style.css" type="text/css" />-->
+  <!--<link rel="stylesheet" href="css/custom-style.css" type="text/css"/>-->
+</head>
+<body>
+<div style="position:relative;width:673px;">
+    <div id="myGrid" style="width:100%;height:500px;"></div>
+	<button type="button" id="selectAll" style="float:left">전체선택</button>
+	<button type="button" id="copy" style="float:left">복사</button>
+	<button type="button" id="deleteAll" style="float:left">전체삭제</button>
+	<button type="button" id="cutOff" style="float:left">잘라내기</button>
+	<button type="button" id="delete" style="float:left">삭제</button>
+	<div class="file_input_div" style="float:right">
+		<input type="button" value="엑셀불러오기" class="file_input_button" />
+		<input type="file" class="file_input_hidden ws-filereader" id="uploadExcel" />
+	</div>
+	<p id="xportxlsx" class="xport"><input type="submit" value="Export to XLSX!" onclick="doit('xlsx');"></p>
+	<p id="xlsxbtn" class="btn">Flash required for actually downloading the generated file.</p>
+	<button type="button" id="downloadExcel" style="float:right">엑셀다운로드</button>
+	<div id="container"></div>
+</div>
+</body>
+<!--<script src="build/replace.grid.min.js"></script>-->
+
+<script src="js/lib/jquery-1.7.min.js"></script>
+<script src="js/lib/jquery-ui-1.8.16.custom.min.js"></script>
+<script src="js/lib/jquery.event.drag-2.2.js"></script>
+<script src="js/lib/jquery.event.drop-2.2.js"></script>
+
+<script src="js/slick.core.js"></script>
+<script src="js/slick.editors.js"></script>
+<script src="js/slick.grid.js"></script>
+
+<script src="js/plugins/slick.cellrangeselector.js"></script>
+<script src="js/plugins/slick.cellexternalcopymanager.js"></script>
+<script src="js/plugins/slick.cellselectionmodel.js"></script>
+<script src="js/plugins/slick.cellrangedecorator.js"></script>
+<script src="js/plugins/slick.dataview.js"></script>
+
+<script src="js/lib/util/shim.js"></script>
+<!--<script src="js/lib/util/require.js"></script>-->
+<script src="js/lib/util/underscore.js"></script>
+
+<script src="js/plugins/moxie.js" ></script>
+<script src="js/plugins/fileupload.js" ></script>
+
+<script src="node_modules/xlsx/dist/jszip.js"></script>
+<script src="node_modules/xlsx/dist/xlsx.js"></script>
+
+<!--<script src="js/lib/util/polyfill.min.js"></script>-->
+<script src="js/lib/util/typedarray.js"></script>
+
+
+<script src="js/lib/util/Blob.js"></script>
+<script src="js/lib/util/FileSaver.js"></script>
+
+<script src="js/lib/util/swfobject.js"></script>
+<script src="js/lib/util/downloadify.min.js"></script>
+<script src="js/lib/util/base64.min.js"></script>
+
+<script src="js/lib/util/excel-parse.js"></script>
+
+<!--<script src="js/lib/util/js/excel-builder.js"></script>-->
+<!--<script src="js/lib/util/js/jquery.slickgrid.export.excel.js"></script>-->
+<script type="text/javascript">var fallback = false;</script>
+<!--[if lte IE 9]><script type="text/javascript">fallback = false;</script><![endif]-->
+<script>
+	var aoa = [
+		["This",  "is", "a",    "Test"],
+		["Fee",   "Fi", "Fo",   "Fum"],
+		[1,       2,    3,      4],
+		["Click", "to", "edit", "cells"]
+	];
+	var ws = XLSX.utils.aoa_to_sheet(aoa);
+	document.getElementById("container").innerHTML = XLSX.utils.sheet_to_html(ws, { editable:true }).replace("<table>", '<table id="table" border="1">');
+
+	function tableau(pid, iid, fmt, ofile) {
+		if(true) {
+			if(document.getElementById(iid)) document.getElementById(iid).hidden = true;
+			Downloadify.create(pid,{
+				swf: 'media/downloadify.swf',
+				//downloadImage: 'images/download.png',
+				width: 100,
+				height: 30,
+				filename: ofile, data: function() { var o = doit(fmt, ofile); return window.btoa(o); },
+				transparent: false,
+				append: false,
+				dataType: 'base64',
+				onComplete: function(){ alert('Your File Has Been Saved!'); },
+				onCancel: function(){ alert('You have cancelled the saving of this file.'); },
+				onError: function(){ alert('You must put something in the File Contents or there will be nothing to save!'); }
+			});
+		} else document.getElementById(pid).innerHTML = "";
+	}
+
+	tableau('xlsxbtn',  'xportxlsx',  'xlsx',  'test.xlsx');
+</script>
+
+
+
+<script src="js/controls/config.grid.js"></script>
+<script src="js/controls/replace.grid.js"></script>
+</html>
