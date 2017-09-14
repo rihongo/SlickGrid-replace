@@ -35,28 +35,4 @@ var columns = [
 
 ];
 
-//default excel options
-var excelOptions = {
-	'headers': [ "", "이름", "전화번호", "메시지 입력"],
-	'filename' : 'target.xlsx',
-	'columns' : [
-		{ width: 10 }, //enable hidden if that column needs to be hidden in the excel file
-		{ width: 20 },
-		{ width: 20 },
-		{ width: 30 }
-	]
-};
-
-function dataInit(rowCount) {
-	for (var i = 0; i < rowCount; i++) {
-		data[i] = {
-			id: "id_" + i,
-			num: i + 1,
-			name: '',
-			phone: '',
-			message: '',
-		};
-	}
-}
-
 

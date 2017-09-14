@@ -55,6 +55,8 @@ function eventListener(){
 			input_dom_element.addEventListener('change', excel_parse.handleFile, false);
 		}
 	} else {
+		tableau('downloadExcel', 'xportxlsx', 'xlsx', 'test.xlsx');
+
 		fileupload.setFlashRuntimePath('js/plugins/Moxie.swf');
 
 		var fileInput = new mOxie.FileInput({
@@ -109,10 +111,8 @@ function eventListener(){
 	});
 
 	$( "#downloadExcel" ).on( "click", function() {
-		//$.exportToExcel(excelOptions.filename, "Report", dataView.getItems(), excelOptions);
-		//doit('xlsx');
-		con
-		//console.log( wbout);
+			var data = dataView.getItems();
+			export_table_to_excel(get_exceldata(data), 'xlsx');
 	});
 
 	$( "#selectAll" ).on( "click", function() {
@@ -162,26 +162,100 @@ function eventListener(){
 
 }
 
-function doit(type) {
-	return export_table_to_excel('myGrid', type || 'xlsx', data);
+function es5_rename(obj, old_name, new_name) {
+	if (old_name !== new_name) {
+		Object.defineProperty(obj, new_name,
+			Object.getOwnPropertyDescriptor(obj, old_name));
+		delete obj[old_name];
+	}
+};
+
+function oldskool_rename(obj, old_name, new_name) {
+	if (obj.hasOwnProperty(old_name)) {
+		obj[new_name] = obj[old_name];
+		delete obj[old_name];
+	}
+};
+
+function get_exceldata(data) {
+	if(check_IE () == false) {
+		for (var j = 0; j < data.length; j++) {
+			es5_rename(data[j], 'name', '이름');
+			es5_rename(data[j], 'phone', '전화번호');
+			es5_rename(data[j], 'message', '메시지 입력');
+			delete data[j]['id'];
+			delete data[j]['num'];
+		}
+	} else {
+		for (var j = 0; j < data.length; j++) {
+			oldskool_rename(data[j], 'name', '이름');
+			oldskool_rename(data[j], 'phone', '전화번호');
+			oldskool_rename(data[j], 'message', '메시지 입력');
+			delete data[j]['id'];
+			delete data[j]['num'];
+		}
+	}
+	return data;
+};
+
+
+function tableau(pid, iid, fmt, ofile) {
+	Downloadify.create(pid,{
+		swf: 'media/downloadify.swf',
+		//downloadImage: 'images/download.png',
+		width: 100,
+		height: 30,
+		filename: ofile,
+		data: function() {
+			var data =  dataView.getItems();
+			var o = export_table_to_excel(get_exceldata(data), 'xlsx');
+			return window.btoa(o);
+		},
+		transparent: false,
+		append: false,
+		dataType: 'base64',
+		onComplete: function(){ console.log('Your File Has Been Saved!'); },
+		onCancel: function(){ console.log('You have cancelled the saving of this file.'); },
+		onError: function(){ console.log('You must put something in the File Contents or there will be nothing to save!'); }
+	});
 }
-
-function export_table_to_excel(id, type) {
- 	var wb = XLSX.utils.table_to_book(document.getElementById(id), {sheet:"Sheet JS"});
- console.log(wb);
-//	var ws = XLSX.utils.aoa_to_sheet(data);
-//	console.log(ws);
-
-	var wbout = XLSX.write(ws, {bookType:type, bookSST:true, type: 'binary'});
-	var fname = 'test.' + type;
+function export_table_to_excel(data, type) {
+	var ws = aoa_to_workbook(data,{header: false});
+	var wbout = XLSX.write(ws, {bookType:type, bookSST:false, type: 'binary'});
+	var fname = 'message.' + type;
 	var bl = new Blob([s2ab(wbout)],{type:"application/octet-stream"});
 	try {
 		saveAs(bl, fname);
-		console.log('save As');
 	} catch(e) {
 		if(typeof console != 'undefined') console.log(e, wbout);
 	}
 	return wbout;
+}
+
+function aoa_to_workbook(data/*:Array<Array<any> >*/, opts)/*:Workbook*/ {
+	return sheet_to_workbook(XLSX.utils.json_to_sheet(data, opts), opts);
+}
+
+function sheet_to_workbook(sheet/*:Worksheet*/, opts)/*:Workbook*/ {
+	var n = opts && opts.sheet ? opts.sheet : "Sheet1";
+	var sheets = {}; sheets[n] = sheet;
+	return { SheetNames: [n], Sheets: sheets };
+}
+
+function dataExport(){
+	return dataView.getItems();
+}
+
+function dataInit(rowCount) {
+	for (var i = 0; i < rowCount; i++) {
+		data[i] = {
+			id: "id_" + i,
+			num: i + 1,
+			name: '',
+			phone: '',
+			message: '',
+		};
+	}
 }
 
 function dataSet(excel) {

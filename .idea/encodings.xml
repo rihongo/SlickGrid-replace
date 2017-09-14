@@ -3,12 +3,10 @@
   <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$/GruntFile.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/js/controls/config.grid.js" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/js/lib/FileSaver.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/js/lib/util/Blob.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/js/lib/util/FileSaver.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/js/lib/util/base64.min.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/js/lib/util/excel-parse.js" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/js/lib/util/jquery.slickgrid.export.excel.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/js/lib/util/polyfill.min.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/js/lib/util/require.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/js/lib/util/typedarray.js" charset="UTF-8" />
@@ -20,6 +18,6 @@
     <file url="file://$PROJECT_DIR$/js/slick.editors.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/js/slick.grid.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/package.json" charset="UTF-8" />
-    <file url="PROJECT" charset="EUC-KR" />
+    <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>
