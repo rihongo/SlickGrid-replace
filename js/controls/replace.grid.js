@@ -55,9 +55,9 @@ function eventListener(){
 			input_dom_element.addEventListener('change', excel_parse.handleFile, false);
 		}
 	} else {
-		tableau('downloadExcel', 'xportxlsx', 'xlsx', 'test.xlsx');
+		tableau('downloadExcel', 'xportxlsx', 'xlsx');
 
-		fileupload.setFlashRuntimePath('js/plugins/Moxie.swf');
+		fileupload.setFlashRuntimePath( PLUGINPATH + '/Moxie.swf');
 
 		var fileInput = new mOxie.FileInput({
 			runtimes: 'flash',
@@ -178,19 +178,22 @@ function oldskool_rename(obj, old_name, new_name) {
 };
 
 function get_exceldata(data) {
+	var dataLeng =  data.length,
+		columnsLeng = columns.length;
+
 	if(check_IE () == false) {
-		for (var j = 0; j < data.length; j++) {
-			es5_rename(data[j], 'name', '이름');
-			es5_rename(data[j], 'phone', '전화번호');
-			es5_rename(data[j], 'message', '메시지 입력');
+		for (var j = 0; j < dataLeng; j++) {
+			for(var i = 1; i < columnsLeng; i++) {
+				es5_rename(data[j], 'field' + i, columns[i].name);
+			}
 			delete data[j]['id'];
 			delete data[j]['num'];
 		}
 	} else {
 		for (var j = 0; j < data.length; j++) {
-			oldskool_rename(data[j], 'name', '이름');
-			oldskool_rename(data[j], 'phone', '전화번호');
-			oldskool_rename(data[j], 'message', '메시지 입력');
+			for(var i = 1; i < columnsLeng; i++) {
+				oldskool_rename(data[j], 'field' + i, columns[i].name);
+			}
 			delete data[j]['id'];
 			delete data[j]['num'];
 		}
@@ -198,14 +201,13 @@ function get_exceldata(data) {
 	return data;
 };
 
-
 function tableau(pid, iid, fmt, ofile) {
 	Downloadify.create(pid,{
-		swf: 'media/downloadify.swf',
-		//downloadImage: 'images/download.png',
+		swf: PLUGINPATH + '/downloadify.swf',
+		downloadImage: 'images/download.png',
 		width: 100,
 		height: 30,
-		filename: ofile,
+		filename: "message.xlsx",
 		data: function() {
 			var data =  dataView.getItems();
 			var o = export_table_to_excel(get_exceldata(data), 'xlsx');
@@ -246,45 +248,6 @@ function dataExport(){
 	return dataView.getItems();
 }
 
-function dataInit(rowCount) {
-	for (var i = 0; i < rowCount; i++) {
-		data[i] = {
-			id: "id_" + i,
-			num: i + 1,
-			name: '',
-			phone: '',
-			message: '',
-		};
-	}
-}
-
-function dataSet(excel) {
-
-	data = [];
-	for (var i = 0; i < ROWCOUNT ; i++ ) {
-		if( excel[i] == null || excel[i] == 'undefined' ) {
-			data[i] = {
-				id: "id_" + i,
-				num: i + 1,
-				name: "",
-				phone: "",
-				message: ""
-			};
-		} else {
-			data[i] = {
-				id: "id_" + i,
-				num: i + 1,
-				name: excel[i][0],
-				phone: excel[i][1],
-				message: excel[i][2]
-			};
-		}
-	}
-	grid.invalidateAllRows();
-	dataView.setItems(data);
-	grid.render();
-}
-
 function check_IE () {
 	var agent = navigator.userAgent.toLowerCase();
 
@@ -303,7 +266,6 @@ function check_IE () {
 	}
 }
 
-
 function s2ab(s) {
 	if(typeof ArrayBuffer !== 'undefined') {
 		var buf = new ArrayBuffer(s.length);
@@ -315,4 +277,10 @@ function s2ab(s) {
 		for (var i=0; i!=s.length; ++i) buf[i] = s.charCodeAt(i) & 0xFF;
 		return buf;
 	}
+}
+
+function repaint() {
+	grid.invalidateAllRows();
+	dataView.setItems(data);
+	grid.render();
 }
