@@ -30,7 +30,7 @@
           .appendTo(args.container)
           .bind("keydown.nav", function (e) {
             if (e.keyCode === $.ui.keyCode.LEFT || e.keyCode === $.ui.keyCode.RIGHT) {
-              e.stopImmediatePropagation();
+              //e.stopImmediatePropagation();
             }
           })
           .focus()

@@ -2,8 +2,10 @@
  * Created by rihongo on 2017-08-23.
  */
 
-var ROWCOUNT = 100;
-var PLUGINPATH = "plugins";
+var ROWCOUNT = 10000;
+var PLUGINPATH = "build/plugins";
+var IMAGEPATH = "build/images";
+
 var columns = [];
 
 function dataInit(rowCount) {
@@ -53,7 +55,7 @@ function dataSet(excel) {
 
 	data = [];
 	for (var i = 0; i < ROWCOUNT ; i++ ) {
-		if( excel[i] == null || excel[i] == 'undefined' ) {
+		if( excel[i] == null || excel[i] == undefined ) {
 			data[i] = {
 				id: "id_" + i,
 				num: i + 1,
@@ -65,9 +67,9 @@ function dataSet(excel) {
 			data[i] = {
 				id: "id_" + i,
 				num: i + 1,
-				field1: excel[i][0],
-				field2: excel[i][1],
-				field3: excel[i][2]
+				field1: excel[i][0] == undefined ? "" : excel[i][0],
+				field2: excel[i][1] == undefined ? "" : excel[i][1],
+				field3: excel[i][2] == undefined ? "" : excel[i][2],
 			};
 		}
 	}

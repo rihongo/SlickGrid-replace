@@ -39,13 +39,33 @@ module.exports = function (grunt) {
 		uglify: {
 			option: {
 				beautify: false,
-				compress: {
-					dropconsole: true,
-					screw_ie8 : true
-				},
 				mangle: {
-					screw_ie8 : true
+					screw_ie8 : false,
+					support_ie8 : true,
 				},
+				screw_ie8 : false,
+				support_ie8 : true,
+				compress: {
+					screw_ie8: false,
+					support_ie8 : true,
+					sequences: true,
+					//properties: true,
+					dead_code: true,
+					drop_debugger: true,
+					comparisons: true,
+					conditionals: true,
+					evaluate: true,
+					booleans: true,
+					loops: true,
+					unused: true,
+					hoist_funs: true,
+					if_return: true,
+					join_vars: true,
+					cascade: true,
+					//negate_iife: true,
+					drop_console: true
+				}
+
 			},
 			build: {
 				src: 'build/script.js',

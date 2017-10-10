@@ -25,6 +25,7 @@ $(function () {
 	dataInit(ROWCOUNT);
 	eventListener();
 	makegrid();
+	dataExport();
 });
 
 function makegrid() {
@@ -63,7 +64,6 @@ function eventListener(){
 			runtimes: 'flash',
 			accept: '[]',
 			browse_button: "uploadExcel",
-			//multiple: true
 		});
 
 		fileInput.onchange = function () {
@@ -111,8 +111,8 @@ function eventListener(){
 	});
 
 	$( "#downloadExcel" ).on( "click", function() {
-			var data = dataView.getItems();
-			export_table_to_excel(get_exceldata(data), 'xlsx');
+		var data = JSON.parse(JSON.stringify( dataView.getItems() ));
+		export_table_to_excel(get_exceldata(data), 'xlsx');
 	});
 
 	$( "#selectAll" ).on( "click", function() {
@@ -139,7 +139,8 @@ function eventListener(){
 	});
 
 	$( "#copy" ).on( "click", function() {
-		$.event.trigger({ type : 'keydown', which :  keyCodes.C, ctrlKey : true });
+		var e = jQuery.Event("keydown", { which :  keyCodes.C, ctrlKey : true  });
+		cellExternalCopyManager.handleKeyDown(e);
 	});
 
 	$( "#deleteAll" ).on( "click", function() {
@@ -153,11 +154,15 @@ function eventListener(){
 	});
 
 	$( "#cutOff" ).on( "click", function() {
-		$.event.trigger({ type : 'keydown', which :  keyCodes.X, ctrlKey: true });
+		var e = jQuery.Event("keydown", { which :  keyCodes.X, ctrlKey : true  });
+		cellExternalCopyManager.handleKeyDown(e);
+		//$.event.trigger({ type : 'keydown', which :  keyCodes.X, ctrlKey: true });
 	});
 
 	$( "#delete" ).on( "click", function() {
-		$.event.trigger({ type : 'keydown', which :  keyCodes.DELETE });
+		var e = jQuery.Event("keydown", { which :  keyCodes.DELETE, ctrlKey : true  });
+		cellExternalCopyManager.handleKeyDown(e);
+		//$.event.trigger({ type : 'keydown', which :  keyCodes.DELETE });
 	});
 
 }
@@ -198,18 +203,20 @@ function get_exceldata(data) {
 			delete data[j]['num'];
 		}
 	}
+
+
 	return data;
 };
 
 function tableau(pid, iid, fmt, ofile) {
 	Downloadify.create(pid,{
 		swf: PLUGINPATH + '/downloadify.swf',
-		downloadImage: 'images/download.png',
+		downloadImage: IMAGEPATH +'/download.png',
 		width: 100,
 		height: 30,
 		filename: "message.xlsx",
 		data: function() {
-			var data =  dataView.getItems();
+			var data = JSON.parse(JSON.stringify( dataView.getItems()));
 			var o = export_table_to_excel(get_exceldata(data), 'xlsx');
 			return window.btoa(o);
 		},
@@ -226,12 +233,14 @@ function export_table_to_excel(data, type) {
 	var wbout = XLSX.write(ws, {bookType:type, bookSST:false, type: 'binary'});
 	var fname = 'message.' + type;
 	var bl = new Blob([s2ab(wbout)],{type:"application/octet-stream"});
+
 	try {
 		saveAs(bl, fname);
 	} catch(e) {
 		if(typeof console != 'undefined') console.log(e, wbout);
 	}
 	return wbout;
+
 }
 
 function aoa_to_workbook(data/*:Array<Array<any> >*/, opts)/*:Workbook*/ {
@@ -267,7 +276,7 @@ function check_IE () {
 }
 
 function s2ab(s) {
-	if(typeof ArrayBuffer !== 'undefined') {
+	if(typeof ArrayBuffer !== 'undefined' && check_IE () == false) {
 		var buf = new ArrayBuffer(s.length);
 		var view = new Uint8Array(buf);
 		for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
@@ -284,3 +293,4 @@ function repaint() {
 	dataView.setItems(data);
 	grid.render();
 }
+

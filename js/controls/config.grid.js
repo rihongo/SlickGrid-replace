@@ -3,7 +3,9 @@
  */
 
 var ROWCOUNT = 100;
-var PLUGINPATH = "plugins";
+var PLUGINPATH = "../plugins";
+var IMAGEPATH = "../images";
+
 var columns = [];
 
 function dataInit(rowCount) {
@@ -49,11 +51,12 @@ function dataInit(rowCount) {
 	}
 }
 
+
 function dataSet(excel) {
 
 	data = [];
 	for (var i = 0; i < ROWCOUNT ; i++ ) {
-		if( excel[i] == null || excel[i] == 'undefined' ) {
+		if( excel[i] == null || excel[i] == undefined ) {
 			data[i] = {
 				id: "id_" + i,
 				num: i + 1,
@@ -65,9 +68,9 @@ function dataSet(excel) {
 			data[i] = {
 				id: "id_" + i,
 				num: i + 1,
-				field1: excel[i][0],
-				field2: excel[i][1],
-				field3: excel[i][2]
+				field1: excel[i][0] == undefined ? "" : excel[i][0],
+				field2: excel[i][1] == undefined ? "" : excel[i][1],
+				field3: excel[i][2] == undefined ? "" : excel[i][2],
 			};
 		}
 	}
