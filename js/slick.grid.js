@@ -3171,7 +3171,11 @@ if (typeof Slick === "undefined") {
           var validationResults = currentEditor.validate();
 
           if (validationResults.valid) {
+            console.log(validationResults);
             if (activeRow < getDataLength()) {
+				console.log(activeRow);
+				console.log(getDataLength());
+
               var editCommand = {
                 row: activeRow,
                 cell: activeCell,
@@ -3231,7 +3235,7 @@ if (typeof Slick === "undefined") {
             });
 
             currentEditor.focus();
-            return false;
+            return true;
           }
         }
 

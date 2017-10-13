@@ -21,7 +21,8 @@ function dataInit(rowCount) {
 			name: "이름",
 			field: "field1",
 			width: 70,
-			editor: Slick.Editors.Text
+			editor: Slick.Editors.Text,
+			validator : positiveNumberValidator
 		},
 		{
 			id: "phone",

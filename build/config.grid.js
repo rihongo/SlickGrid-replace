@@ -2,7 +2,7 @@
  * Created by rihongo on 2017-08-23.
  */
 
-var ROWCOUNT = 10000;
+var ROWCOUNT = 20;
 var PLUGINPATH = "build/plugins";
 var IMAGEPATH = "build/images";
 
@@ -21,21 +21,22 @@ function dataInit(rowCount) {
 			name: "이름",
 			field: "field1",
 			width: 70,
-			editor: Slick.Editors.Text
+			editor: Slick.Editors.Text,
 		},
 		{
 			id: "phone",
 			name: "전화번호",
 			field: "field2",
 			width: 120,
-			editor: Slick.Editors.Text
+			editor: Slick.Editors.Text,
+			validator : Slick.Editors.phoneNumberValidator
 		},
 		{
 			id: "message",
 			name: "메시지 입력",
 			field: "field3",
 			width: 415,
-			editor: Slick.Editors.Text
+			editor: Slick.Editors.Text,
 		}
 
 	];

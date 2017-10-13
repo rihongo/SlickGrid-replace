@@ -15,7 +15,8 @@
         "YesNoSelect": YesNoSelectEditor,
         "Checkbox": CheckboxEditor,
         "PercentComplete": PercentCompleteEditor,
-        "LongText": LongTextEditor
+        "LongText": LongTextEditor,
+		"phoneNumberValidator": phoneNumberValidator,
       }
     }
   });
@@ -87,6 +88,19 @@
     };
 
     this.init();
+  }
+  
+  function phoneNumberValidator(value) {
+      var _reg = /^[0-9]*$/;
+	  if(_reg.test(value)) {
+		  var _phone_reg = /^(010|011|016|017|018|019)\-?\d{3,4}\-?\d{4}$/;
+		  if( _phone_reg.test(value)) {
+			  return {valid: true, msg: null};
+		  }
+		  return {valid: true, msg: "NoPhone"};
+	  } else {
+		  return {valid: false, msg: "The price must be a number format"};
+	  }
   }
 
   function IntegerEditor(args) {

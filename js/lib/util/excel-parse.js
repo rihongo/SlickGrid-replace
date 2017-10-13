@@ -57,7 +57,6 @@ ExcelParse.prototype = (function(){
 		},
 		handleFile : function(e){
 			var files = e.target.files;
-
 			var i,f;
 			for (i = 0; i != files.length; ++i) {
 				f = files[i];
@@ -76,17 +75,19 @@ ExcelParse.prototype = (function(){
 						var arr = $this.fixdata(data);
 						workbook = XLSX.read(btoa(arr), {type: 'base64'});
 					}
+
 					workbook.SheetNames.forEach(function(item, index, array) {
-						var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[item]);
-						var html = XLSX.utils.sheet_to_html(workbook.Sheets[item]);
+						//var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[item]);
+						//var html = XLSX.utils.sheet_to_html(workbook.Sheets[item]);
 						var json = XLSX.utils.sheet_to_json(workbook.Sheets[item], {header:1});
-						var formulae = XLSX.utils.sheet_to_formulae(workbook.Sheets[item]);
+						//var formulae = XLSX.utils.sheet_to_formulae(workbook.Sheets[item]);
 
 						//console.log(csv);
 						//console.log(html);
 						//console.log(json);
+						console.log(workbook.Sheets);
+
 						dataSet(json);
-						//console.log(workbook.Sheets[item]);
 
 					});
 				};

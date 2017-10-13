@@ -7,7 +7,7 @@ var data = [],
 		editable: true,
 		enableAddRow: false,
 		forceFitColumns: true,
-		enableColumnReorder: false
+		enableColumnReorder: true
 	},
 	dataView = null,
 	keyCodes = {
@@ -75,6 +75,7 @@ function eventListener(){
 				var data = reader.result;
 
 				workbook = XLSX.read(data, {type: 'binary'});
+				console.log(workbook.SheetNames);
 				workbook.SheetNames.forEach(function(item, index, array) {
 
 					//var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[item]);
