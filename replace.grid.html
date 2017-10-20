@@ -11,18 +11,18 @@
   <!--<link rel="stylesheet" href="css/custom-style.css" type="text/css"/>-->
 </head>
 <body>
-<div style="position:relative;width:673px;">
-    <div id="myGrid" style="width:100%;height:500px;"></div>
-	<button type="button" id="selectAll" style="float:left">전체선택</button>
-	<button type="button" id="copy" style="float:left">복사</button>
-	<button type="button" id="deleteAll" style="float:left">전체삭제</button>
-	<button type="button" id="cutOff" style="float:left">잘라내기</button>
-	<button type="button" id="delete" style="float:left">삭제</button>
-	<div class="file_input_div" style="float:right">
-		<input type="button" value="엑셀불러오기" class="file_input_button" />
+<div  style="position:relative; width:750px; height: 528px; border-left: none; border-top: none; border-right: none;" class="excelmodule_area">
+    <div id="myGrid" style="width: 100%; height: 500px; overflow: hidden; outline: 0px; position: relative;"></div>
+	<button type="button" id="selectAll" style="float:left" class="new_btn">전체선택</button>
+	<button type="button" id="copy" style="float:left" class="new_btn">복사</button>
+	<button type="button" id="deleteAll" style="float:left" class="new_btn">전체삭제</button>
+	<button type="button" id="cutOff" style="float:left" class="new_btn">잘라내기</button>
+	<button type="button" id="delete" style="float:left" class="new_btn">삭제</button>
+	<div class="file_input_div new_filebox" style="float:right">
+		<input type="button" value="엑셀불러오기" class="file_input_button new_btn_file" />
 		<input type="file" class="file_input_hidden ws-filereader" id="uploadExcel" />
 	</div>
-	<button type="button" id="downloadExcel" style="float:right">엑셀다운로드</button>
+	<button type="button" id="downloadExcel" style="float:right" class="new_btn">엑셀다운로드</button>
 </div>
 </body>
 <script src="https://code.jquery.com/jquery-1.12.3.min.js" 	integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>

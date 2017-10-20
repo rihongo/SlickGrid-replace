@@ -76,18 +76,21 @@ ExcelParse.prototype = (function(){
 						workbook = XLSX.read(btoa(arr), {type: 'base64'});
 					}
 
+					var range = "A1:C" + ROWCOUNT.toString();
 					workbook.SheetNames.forEach(function(item, index, array) {
 						//var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[item]);
 						//var html = XLSX.utils.sheet_to_html(workbook.Sheets[item]);
-						var json = XLSX.utils.sheet_to_json(workbook.Sheets[item], {header:1});
+						var json = XLSX.utils.sheet_to_json(workbook.Sheets[item], {header:1,range:range});
 						//var formulae = XLSX.utils.sheet_to_formulae(workbook.Sheets[item]);
-
 						//console.log(csv);
 						//console.log(html);
 						//console.log(json);
-						console.log(workbook.Sheets);
-
-						dataSet(json);
+						if(json.length > ROWCOUNT) {
+							alert( ROWCOUNT + '건이 넘는 파일은 불러올 수 없습니다.');
+							return;
+						} else {
+							dataSet(json);
+						}
 
 					});
 				};

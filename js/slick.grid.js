@@ -56,7 +56,7 @@ if (typeof Slick === "undefined") {
     // settings
     var defaults = {
       explicitInitialization: false,
-      rowHeight: 25,
+      rowHeight: 26,
       defaultColumnWidth: 80,
       enableAddRow: false,
       leaveSpaceForNewRows: false,
@@ -72,7 +72,7 @@ if (typeof Slick === "undefined") {
       autoHeight: false,
       editorLock: Slick.GlobalEditorLock,
       showHeaderRow: false,
-      headerRowHeight: 25,
+      headerRowHeight: 26,
       showTopPanel: false,
       topPanelHeight: 25,
       formatterFactory: null,
@@ -82,7 +82,7 @@ if (typeof Slick === "undefined") {
       multiSelect: true,
       enableTextSelectionOnCells: false,
       dataItemColumnValueExtractor: null,
-      fullWidthRows: false,
+      fullWidthRows: true,
       multiColumnSort: false,
       defaultFormatter: defaultFormatter,
       forceSyncScrolling: false,
@@ -236,7 +236,7 @@ if (typeof Slick === "undefined") {
 
       $focusSink = $("<div tabIndex='0' hideFocus style='position:fixed;width:0;height:0;top:0;left:0;outline:0;'></div>").appendTo($container);
 
-      $headerScroller = $("<div class='slick-header ui-state-default' style='overflow:hidden;position:relative;' />").appendTo($container);
+      $headerScroller = $("<div class='slick-header ui-state-default new_bordernone' style='overflow:hidden;position:relative;' />").appendTo($container);
       $headers = $("<div class='slick-header-columns' style='left:-1000px' />").appendTo($headerScroller);
       $headers.width(getHeadersWidth());
 
@@ -426,9 +426,10 @@ if (typeof Slick === "undefined") {
     function disableSelection($target) {
       if ($target && $target.jquery) {
         $target
-            .attr("unselectable", "on")
+            .attr("unselectable", "off")
             .css("MozUserSelect", "none")
             .bind("selectstart.ui", function () {
+
               return false;
             }); // from jquery:ui.core.js 1.7.2
       }
@@ -560,7 +561,7 @@ if (typeof Slick === "undefined") {
         var m = columns[i];
 
         var header = $("<div class='ui-state-default slick-header-column' />")
-            .html("<span class='slick-column-name'>" + m.name + "</span>")
+            .html("<span class='slick-column-name new_tit'>" + m.name + "</span>")
             .width(m.width - headerColumnWidthDiff)
             .attr("id", "" + uid + m.id)
             .attr("title", m.toolTip || "")
@@ -901,7 +902,7 @@ if (typeof Slick === "undefined") {
       }
       el.remove();
 
-      var r = $("<div class='slick-row' />").appendTo($canvas);
+      var r = $("<div class='slick-row new_list' />").appendTo($canvas);
       el = $("<div class='slick-cell' id='' style='visibility:hidden'>-</div>").appendTo(r);
       cellWidthDiff = cellHeightDiff = 0;
       if (el.css("box-sizing") != "border-box" && el.css("-moz-box-sizing") != "border-box" && el.css("-webkit-box-sizing") != "border-box") {
@@ -2345,8 +2346,12 @@ if (typeof Slick === "undefined") {
     function handleHeaderClick(e) {
       var $header = $(e.target).closest(".slick-header-column", ".slick-header-columns");
       var column = $header && $header.data("column");
-      if (column) {
-        trigger(self.onHeaderClick, {column: column}, e);
+		if (column) {
+			var cellNum = parseInt(column.field.replace("field",""));
+			var ranges =  [{fromRow: 0, fromCell: cellNum, toRow: ROWCOUNT-1, toCell: cellNum}];
+			selectionModel.setSelectedRanges(ranges);
+			trigger(self.onHeaderClick, {column: column}, e);
+
       }
     }
 
@@ -2403,7 +2408,6 @@ if (typeof Slick === "undefined") {
       if (!$cell.length) {
         return null;
       }
-
       var row = getRowFromNode($cell[0].parentNode);
       var cell = getCellFromNode($cell[0]);
 
@@ -2549,17 +2553,25 @@ if (typeof Slick === "undefined") {
       return true;
     }
 
-    function makeActiveCellNormal() {
+    function makeActiveCellNormal(msg) {
       if (!currentEditor) {
         return;
       }
+	  var validationResults = currentEditor.validate();
+
       trigger(self.onBeforeCellEditorDestroy, {editor: currentEditor});
       currentEditor.destroy();
       currentEditor = null;
 
       if (activeCellNode) {
         var d = getDataItem(activeRow);
-        $(activeCellNode).removeClass("editable invalid");
+        if(validationResults.msg == 'NOPHONE') {
+            $(activeCellNode).removeClass("editable invalid");
+            $(activeCellNode).width();  // force layout
+            $(activeCellNode).addClass("invalid");
+        } else {
+            $(activeCellNode).removeClass("editable invalid");
+        }
         if (d) {
           var column = columns[activeCell];
           var formatter = getFormatter(activeRow, column);
@@ -3169,13 +3181,8 @@ if (typeof Slick === "undefined") {
       if (currentEditor) {
         if (currentEditor.isValueChanged()) {
           var validationResults = currentEditor.validate();
-
           if (validationResults.valid) {
-            console.log(validationResults);
             if (activeRow < getDataLength()) {
-				console.log(activeRow);
-				console.log(getDataLength());
-
               var editCommand = {
                 row: activeRow,
                 cell: activeCell,
@@ -3183,7 +3190,11 @@ if (typeof Slick === "undefined") {
                 serializedValue: currentEditor.serializeValue(),
                 prevSerializedValue: serializedEditorValue,
                 execute: function () {
-                  this.editor.applyValue(item, this.serializedValue);
+                  var value = this.serializedValue;
+                  if(column.maxLength < value.length) {
+					  value = value.substring(0, column.maxLength );
+                  }
+					this.editor.applyValue(item, value);
                   updateRow(this.row);
                   trigger(self.onCellChange, {
                     row: activeRow,
@@ -3207,7 +3218,7 @@ if (typeof Slick === "undefined") {
                 options.editCommandHandler(item, column, editCommand);
               } else {
                 editCommand.execute();
-                makeActiveCellNormal();
+                makeActiveCellNormal(validationResults.msg);
               }
 
             } else {
@@ -3224,7 +3235,6 @@ if (typeof Slick === "undefined") {
             $(activeCellNode).removeClass("invalid");
             $(activeCellNode).width();  // force layout
             $(activeCellNode).addClass("invalid");
-
             trigger(self.onValidationError, {
               editor: currentEditor,
               cellNode: activeCellNode,

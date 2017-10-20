@@ -62,7 +62,13 @@
     };
 
     this.serializeValue = function () {
-      return $input.val();
+      if (args.column.validator) {
+        if ($input.val() && '1' === $input.val().substr(0, 1)) {
+          return '0' + $input.val();
+		}
+      }
+
+      return $input.val().replace(/\r/g, "");
     };
 
     this.applyValue = function (item, state) {
@@ -76,9 +82,9 @@
     this.validate = function () {
       if (args.column.validator) {
         var validationResults = args.column.validator($input.val());
-        if (!validationResults.valid) {
+        //if (!validationResults.valid) {
           return validationResults;
-        }
+        //}
       }
 
       return {
@@ -91,15 +97,17 @@
   }
   
   function phoneNumberValidator(value) {
-      var _reg = /^[0-9]*$/;
-	  if(_reg.test(value)) {
-		  var _phone_reg = /^(010|011|016|017|018|019)\-?\d{3,4}\-?\d{4}$/;
-		  if( _phone_reg.test(value)) {
-			  return {valid: true, msg: null};
-		  }
-		  return {valid: true, msg: "NoPhone"};
-	  } else {
+	  if(value == '') return {valid: true, msg: null};
+
+	  if(value.match(/[^0-9\-]/)) {
 		  return {valid: false, msg: "The price must be a number format"};
+	  } else {
+		  var _phone_reg = /^(010|011|016|017|018|019)\-?\d{3,4}\-?\d{4}$/;
+		  var valueLength = value.replace(/\-/g,'').length;
+		  if( !_phone_reg.test(value) || valueLength < 10 || valueLength > 12) {
+			  return {valid: true, msg: "NOPHONE"};
+		  }
+		  return {valid: true, msg: null};
 	  }
   }
 

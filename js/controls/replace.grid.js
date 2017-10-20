@@ -7,7 +7,7 @@ var data = [],
 		editable: true,
 		enableAddRow: false,
 		forceFitColumns: true,
-		enableColumnReorder: true
+		enableColumnReorder: false
 	},
 	dataView = null,
 	keyCodes = {
@@ -73,9 +73,8 @@ function eventListener(){
 
 			reader.onload = function () {
 				var data = reader.result;
-
+				console.log(data);
 				workbook = XLSX.read(data, {type: 'binary'});
-				console.log(workbook.SheetNames);
 				workbook.SheetNames.forEach(function(item, index, array) {
 
 					//var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[item]);
@@ -83,9 +82,13 @@ function eventListener(){
 					var json = XLSX.utils.sheet_to_json(workbook.Sheets[item], {header:1});
 					//var formulae = XLSX.utils.sheet_to_formulae(workbook.Sheets[item]);
 
-					//console.log(csv);
-					//console.log(json);
-					dataSet(json);
+					if(json.length > ROWCOUNT) {
+						alert( ROWCOUNT + '건이 넘는 파일은 불러올 수 없습니다.');
+						return;
+					} else {
+						dataSet(json);
+					}
+
 				});
 			};
 

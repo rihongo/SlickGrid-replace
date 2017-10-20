@@ -244,8 +244,9 @@
             'toRow': activeRow+this.h-1
           }
 
-        //  this.markCopySelection([bRange]);
+        //   this.markCopySelection([bRange]);
         //   _grid.getSelectionModel().setSelectedRanges([bRange]);
+			$(".selected").removeClass("invalid");
           this.cellExternalCopyManager.onPasteCells.notify({ranges: [bRange]});
 
         },
@@ -276,7 +277,7 @@
           }
 
       //    this.markCopySelection([bRange]);
-          _grid.getSelectionModel().setSelectedRanges([bRange]);
+      //    _grid.getSelectionModel().setSelectedRanges([bRange]);
           this.cellExternalCopyManager.onPasteCells.notify({ranges: [bRange]});
           
           if(addRows > 1){            
@@ -298,6 +299,7 @@
     
     
     function handleKeyDown(e, args) {
+
             if (!_grid.getEditorLock().isActive() || _grid.getOptions().autoEdit) {
         if (e.which == keyCodes.ESC) {
           if (_copiedRanges) {

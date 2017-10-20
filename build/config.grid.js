@@ -14,29 +14,32 @@ function dataInit(rowCount) {
 			id: "selector",
 			name: "",
 			field: "num",
-			width: 50
+			width: 53
 		},
 		{
 			id: "name",
 			name: "이름",
 			field: "field1",
-			width: 70,
+			width: 74,
 			editor: Slick.Editors.Text,
+			maxLength : 10
 		},
 		{
 			id: "phone",
 			name: "전화번호",
 			field: "field2",
-			width: 120,
+			width: 127,
 			editor: Slick.Editors.Text,
-			validator : Slick.Editors.phoneNumberValidator
+			validator : Slick.Editors.phoneNumberValidator,
+			maxLength : 12
 		},
 		{
 			id: "message",
 			name: "메시지 입력",
 			field: "field3",
-			width: 415,
+			width: 441,
 			editor: Slick.Editors.Text,
+			maxLength : 100
 		}
 
 	];
